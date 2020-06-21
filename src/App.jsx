@@ -1,29 +1,24 @@
 import React from 'react';
-import './index.css'
+import './index.css';
 import InputField from './InputField';
 import WordBox from './WordBox';
-import { ThemeProvider, CSSReset, Flex } from '@chakra-ui/core'
-import words from "./WordBox/words.json";
-
+import { ThemeProvider, CSSReset, Flex } from '@chakra-ui/core';
 
 const App = () => {
-  const getWords = () => {
-    const typingWords = [];
-    
-    words.english.forEach(w => {
-      typingWords.push(w);
-    });
-    console.log(typingWords);
-    
-    return typingWords;
-  };
-
   return (
     <ThemeProvider>
       <CSSReset />
-      <Flex alignContent='center' align='column' justifyContent='center'>
-        <WordBox typingWords={getWords} />
-        <InputField class="typing-test-entry" textPlace="text-center" />
+      <Flex
+        className="test-area"
+        alignContent="center"
+        justify="center"
+        flexDirection="column"
+        w="34%"
+        margin="auto"
+        my="20%"
+      >
+        <WordBox />
+        <InputField textPlace="text-center" />
       </Flex>
     </ThemeProvider>
   );
