@@ -8,10 +8,6 @@ const WordBox = () => {
     const numW = numWords;
     let typingWords = [];
 
-    // words.english.forEach((w) => {
-    //   typingWords.push(w);
-    // });
-
     typingWords = Array.from(
       // make an array of the length passed in from random
       // indeces of the words file
@@ -24,15 +20,15 @@ const WordBox = () => {
     return typingWords;
   };
 
-  const highlightRandWord = (current) => {
+  const highlightCurrWord = (current) => {
     const words = getWords(50);
     let textBoxes = [];
-    const randomHighlight = Math.floor(Math.random() * words.length);
     let currWord = current;
+    let renderedWord = 0;
 
     words.forEach((w) => {
       // if we're at the current word, highlight it
-      randomHighlight === currWord
+      renderedWord === currWord
         ? textBoxes.push(
             <Text
               as="span"
@@ -57,7 +53,7 @@ const WordBox = () => {
               {w + ' '}
             </Text>
           );
-      currWord++;
+      renderedWord++;
     });
 
     return textBoxes;
@@ -76,7 +72,7 @@ const WordBox = () => {
       direction="ltr"
       textAlign={['left']}
     >
-      {highlightRandWord().map((t) => t)}
+      {highlightCurrWord(0).map((t) => t)}
     </Flex>
   );
 };
