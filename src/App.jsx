@@ -1,6 +1,6 @@
 import React from 'react';
 import './index.css';
-import InputField from './InputField';
+import TypingBox from './TypingBox';
 import WordBox from './WordBox';
 import { ThemeProvider, CSSReset, Flex } from '@chakra-ui/core';
 
@@ -18,7 +18,7 @@ const App = () => {
         my="15%"
       >
         <WordBox />
-        <InputField textPlace="text-center" />
+        <TypingBox />
       </Flex>
     </ThemeProvider>
   );
