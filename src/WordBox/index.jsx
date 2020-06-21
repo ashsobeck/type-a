@@ -5,6 +5,7 @@ import words from './words.json';
 
 const WordBox = () => {
   const getWords = (numWords) => {
+    const numW = numWords;
     let typingWords = [];
 
     // words.english.forEach((w) => {
@@ -12,9 +13,9 @@ const WordBox = () => {
     // });
 
     typingWords = Array.from(
-      { length: numWords },
+      { length: numW },
       // () => words.english[Math.floor(Math.random * words.english.length]
-      () => words.english[0]
+      () => words.english[Math.floor(Math.random() * words.english.length)]
     );
 
     console.log(typingWords);
@@ -65,7 +66,6 @@ const WordBox = () => {
     <Box
       className="word-box"
       display="block"
-      direction="ltr"
       bg="gray.100"
       maxW="100%"
       h="auto"
