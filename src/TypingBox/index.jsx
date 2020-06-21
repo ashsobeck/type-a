@@ -5,9 +5,11 @@ import '../index.css';
 const TypingBox = (props) => {
   return (
     <PseudoBox
+      id="typing-box"
       as="input"
       placeholder=" happy typing!"
       border="green.100"
+      borderRadius="1px"
       rounded="sm"
       bg="gray.200"
       alignSelf="center"
@@ -15,7 +17,9 @@ const TypingBox = (props) => {
       textAlign="center"
       my="5"
       h="2rem"
-      _focus={{}}
+      _focus={{
+        borderColor: 'green.100',
+      }}
     />
   );
 };
