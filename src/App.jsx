@@ -13,9 +13,9 @@ const App = () => {
         alignContent="center"
         justify="center"
         flexDirection="column"
-        w="34%"
+        w="32%"
         margin="auto"
-        my="20%"
+        my="15%"
       >
         <WordBox />
         <InputField textPlace="text-center" />
