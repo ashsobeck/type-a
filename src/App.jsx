@@ -22,8 +22,8 @@ const App = () => {
     return typingWords;
   };
 
-  const highlightCurrWord = (current) => {
-    const words = getWords(50);
+  const highlightCurrWord = (current, numWords) => {
+    const words = getWords(numWords);
     let textBoxes = [];
     let currWord = current;
     let renderedWord = 0;
@@ -73,7 +73,7 @@ const App = () => {
         margin="auto"
         my="15%"
       >
-        <WordBox words={highlightCurrWord(0)} />
+        <WordBox words={highlightCurrWord(0, 50)} />
         <TypingBox />
       </Flex>
     </ThemeProvider>
