@@ -22,8 +22,8 @@ const App = () => {
     return typingWords;
   };
 
-  const highlightCurrWord = (current) => {
-    const words = getWords(50);
+  const highlightCurrWord = (current, listOfWords) => {
+    const words = listOfWords;
     let textBoxes = [];
     let currWord = current;
     let renderedWord = 0;
@@ -71,9 +71,10 @@ const App = () => {
         flexDirection="column"
         w="32%"
         margin="auto"
-        my="15%"
+        h="100vh"
+        alignItems="center"
       >
-        <WordBox words={highlightCurrWord(0)} />
+        <WordBox words={highlightCurrWord(0, getWords(100))} />
         <TypingBox />
       </Flex>
     </ThemeProvider>

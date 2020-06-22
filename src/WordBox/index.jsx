@@ -1,6 +1,6 @@
 import React from 'react';
 import '../index.css';
-import { Flex } from '@chakra-ui/core';
+import { Box } from '@chakra-ui/core';
 
 const WordBox = (props) => {
   const words = Array.from(props.words);
@@ -10,13 +10,12 @@ const WordBox = (props) => {
   // };
 
   return (
-    <Flex
+    <Box
       className="word-box"
       bg="gray.100"
       p="1"
       maxW="100%"
       h="auto"
-      justify="center"
       alignSelf="center"
       rounded="lg"
       display="block"
@@ -24,7 +23,7 @@ const WordBox = (props) => {
       textAlign={['left']}
     >
       {words.map((t) => t)}
-    </Flex>
+    </Box>
   );
 };
 
