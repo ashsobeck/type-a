@@ -21,6 +21,7 @@ const WordBox = (props) => {
       display="block"
       direction="ltr"
       textAlign={['left']}
+      boxShadow="xl"
     >
       {words.map((t) => t)}
     </Box>

@@ -1,9 +1,9 @@
-import React from 'react';
-import './index.css';
-import words from './WordBox/words.json';
-import TypingBox from './TypingBox';
-import WordBox from './WordBox';
-import { ThemeProvider, CSSReset, Flex, Text } from '@chakra-ui/core';
+import React from "react";
+import "./index.css";
+import words from "./WordBox/words.json";
+import TypingBox from "./TypingBox";
+import WordBox from "./WordBox";
+import { ThemeProvider, CSSReset, Flex, Text, Box } from "@chakra-ui/core";
 
 const App = () => {
   const getWords = (numWords) => {
@@ -40,7 +40,7 @@ const App = () => {
               className="word-highlighted"
               color="green.500"
             >
-              {w + ' '}
+              {w + " "}
             </Text>
           )
         : textBoxes.push(
@@ -52,7 +52,7 @@ const App = () => {
               className="word"
               color="grey.800"
             >
-              {w + ' '}
+              {w + " "}
             </Text>
           );
       renderedWord++;
@@ -64,19 +64,21 @@ const App = () => {
   return (
     <ThemeProvider>
       <CSSReset />
-      <Flex
-        className="test-area"
-        alignContent="center"
-        justify="center"
-        flexDirection="column"
-        w="32%"
-        margin="auto"
-        h="100vh"
-        alignItems="center"
-      >
-        <WordBox words={highlightCurrWord(0, getWords(100))} />
-        <TypingBox />
-      </Flex>
+      <Box>
+        <Flex
+          className="test-area"
+          alignContent="center"
+          justify="center"
+          flexDirection="column"
+          w="32%"
+          margin="auto"
+          h="100vh"
+          alignItems="center"
+        >
+          <WordBox words={highlightCurrWord(0, getWords(100))} />
+          <TypingBox />
+        </Flex>
+      </Box>
     </ThemeProvider>
   );
 };
