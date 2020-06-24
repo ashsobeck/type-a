@@ -1,4 +1,23 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# type-a
+
+inspired by typings.gg
+
+## Why did I do this?
+
+I wanted to learn more about front end development and react. I really enjoy using
+typings.gg, so I wanted to make a typing test in the same realm as it, but made in
+react.
+
+I plan on adding some more features that typings doesn't have, such as a leaderboard, a few different
+modes (one word in the word box for focusing, hard mode where what you type shows up as password dots, and some others),
+and any other things that I thing of.
+
+Feel free to open issues or pull requests with features that you'd like to see. I'd like to implement the initial functionality
+of the typing test myself, but will definitely look at any issues or PRs.
+
+Thanks!
+
+<!-- This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
 
@@ -65,4 +84,4 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/de
 
 ### `npm run build` fails to minify
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify -->
