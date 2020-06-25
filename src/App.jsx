@@ -1,12 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import "./index.css";
 import words from "./WordBox/words.json";
 import TypingBox from "./TypingBox";
 import WordBox from "./WordBox";
 import { ThemeProvider, CSSReset, Flex, Box, Text } from "@chakra-ui/core";
-import { render } from "@testing-library/react";
 
 const App = () => {
+  const [currentWord, setCurrentWord] = useState(0);
+  const [wordlist, setWordlist] = useState(getWords(100));
+  const [numWords, setNumWords] = useState(getWords(100));
+
   const getWords = (numWords) => {
     const numW = numWords;
     let typingWords = [];
@@ -23,7 +26,6 @@ const App = () => {
     return typingWords;
   };
 
-  let currentWord = 0;
   const highlightCurrWord = (current, listOfWords) => {
     let textBoxes = [];
     let currWord = current;
@@ -63,17 +65,24 @@ const App = () => {
     return textBoxes;
   };
 
-  let wordlist = getWords(100);
+  const compareWords = (playerWord) => {
+    if (playerWord.target.value === " ") {
+      playerWord.target.value = "";
+      return;
+    }
+    if (
+      playerWord.target.value.slice(-1) === " " &&
+      playerWord.target.value.length > 1
+    ) {
+      setCurrentWord(currentWord + 1);
 
-  const compareWords = (words, playerWord) => {
-    console.log("this works  " + playerWord);
-    if (playerWord.slice(-1) === " ") {
-      currentWord++;
+      console.log(playerWord);
+      playerWord.target.value = "";
       console.log("currentWord = " + currentWord);
-      render(highlightCurrWord(currentWord, words));
     }
   };
 
+  console.log(currentWord);
   return (
     <ThemeProvider>
       <CSSReset />
@@ -88,8 +97,16 @@ const App = () => {
           h="100vh"
           alignItems="center"
         >
-          <WordBox words={highlightCurrWord(currentWord, wordlist)} />
-          <TypingBox words={wordlist} compWord={compareWords} />
+          <WordBox
+            renderWord={highlightCurrWord}
+            wordlist={wordlist}
+            currentWord={currentWord}
+          />
+          <TypingBox
+            words={wordlist}
+            compWord={compareWords}
+            currentWord={currentWord}
+          />
         </Flex>
       </Box>
     </ThemeProvider>
