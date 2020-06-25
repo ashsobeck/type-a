@@ -3,13 +3,12 @@ import { PseudoBox } from "@chakra-ui/core";
 import "../index.css";
 
 const TypingBox = (props) => {
-  const words = props.words;
-  const checkWord = props.compWord;
+  const pholder = props.currentWord === 0 ? " happy typing!" : " ";
   return (
     <PseudoBox
       id="typing-box"
       as="input"
-      placeholder=" happy typing!"
+      placeholder={pholder}
       border="green.100"
       borderRadius="1px"
       rounded="sm"
@@ -22,7 +21,7 @@ const TypingBox = (props) => {
       _focus={{
         borderColor: "green.100",
       }}
-      onChange={(w) => checkWord(words, w.target.value)}
+      onChange={(w) => props.compWord(w)}
     />
   );
 };

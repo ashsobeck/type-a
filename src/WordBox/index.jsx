@@ -2,9 +2,8 @@ import React from "react";
 import { Box } from "@chakra-ui/core";
 
 const WordBox = (props) => {
-  const wordlist = props.words;
   console.log("here in wordbox");
-  console.log(wordlist);
+  console.log(props.words);
   return (
     <Box
       className="word-box"
@@ -19,7 +18,7 @@ const WordBox = (props) => {
       textAlign="left"
       boxShadow="xl"
     >
-      {wordlist.map((t) => t)}
+      {props.renderWord(props.currentWord, props.wordlist).map((t) => t)}
     </Box>
   );
 };
