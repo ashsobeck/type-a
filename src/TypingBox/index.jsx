@@ -1,8 +1,10 @@
-import React from 'react';
-import { PseudoBox } from '@chakra-ui/core';
-import '../index.css';
+import React from "react";
+import { PseudoBox } from "@chakra-ui/core";
+import "../index.css";
 
 const TypingBox = (props) => {
+  const words = props.words;
+  const checkWord = props.compWord;
   return (
     <PseudoBox
       id="typing-box"
@@ -18,8 +20,9 @@ const TypingBox = (props) => {
       my="5"
       h="2rem"
       _focus={{
-        borderColor: 'green.100',
+        borderColor: "green.100",
       }}
+      onChange={(w) => checkWord(words, w.target.value)}
     />
   );
 };
