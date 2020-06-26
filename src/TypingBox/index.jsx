@@ -3,23 +3,28 @@ import { PseudoBox } from "@chakra-ui/core";
 import "../index.css";
 
 const TypingBox = (props) => {
-  const pholder = props.currentWord === 0 ? " happy typing!" : " ";
+  const pholder = props.currentWord === 0 ? " happy typing!" : "";
   return (
     <PseudoBox
       id="typing-box"
       as="input"
       placeholder={pholder}
-      border="green.100"
-      borderRadius="1px"
       rounded="sm"
       bg="gray.200"
       alignSelf="center"
       maxW="30%"
       textAlign="center"
+      boxShadow="md"
       my="5"
       h="2rem"
+      _hover={{
+        bg: "blue.100",
+        boxShadow: "lg",
+      }}
       _focus={{
-        borderColor: "green.100",
+        bg: "blue.100",
+        outline: "none",
+        boxShadow: "lg",
       }}
       onChange={(w) => props.compWord(w)}
     />
