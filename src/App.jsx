@@ -7,8 +7,6 @@ import { ThemeProvider, CSSReset, Flex, Box, Text } from "@chakra-ui/core";
 
 const App = () => {
   const [currentWord, setCurrentWord] = useState(0);
-  const [wordlist, setWordlist] = useState(getWords(100));
-  const [numWords, setNumWords] = useState(getWords(100));
 
   const getWords = (numWords) => {
     const numW = numWords;
@@ -26,6 +24,9 @@ const App = () => {
     return typingWords;
   };
 
+  const [numWords, setNumWords] = useState(10);
+  const [wordlist, setWordlist] = useState(getWords(numWords));
+
   const highlightCurrWord = (current, listOfWords) => {
     let textBoxes = [];
     let currWord = current;
@@ -42,7 +43,7 @@ const App = () => {
               direction="ltr"
               fontSize="md"
               className="word-highlighted"
-              color="green.500"
+              color="green.400"
             >
               {w + " "}
             </Text>
@@ -54,7 +55,7 @@ const App = () => {
               direction="ltr"
               fontSize="md"
               className="word"
-              color="grey.800"
+              color="grey.900"
             >
               {w + " "}
             </Text>
@@ -74,15 +75,15 @@ const App = () => {
       playerWord.target.value.slice(-1) === " " &&
       playerWord.target.value.length > 1
     ) {
-      setCurrentWord(currentWord + 1);
-
-      console.log(playerWord);
+      if (currentWord < numWords - 1) {
+        setCurrentWord(currentWord + 1);
+      } else {
+        setCurrentWord(0);
+      }
       playerWord.target.value = "";
-      console.log("currentWord = " + currentWord);
     }
   };
 
-  console.log(currentWord);
   return (
     <ThemeProvider>
       <CSSReset />
