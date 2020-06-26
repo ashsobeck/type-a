@@ -24,7 +24,7 @@ const App = () => {
     return typingWords;
   };
 
-  const [numWords, setNumWords] = useState(10);
+  const [numWords, setNumWords] = useState(100);
   const [wordlist, setWordlist] = useState(getWords(numWords));
 
   const highlightCurrWord = (current, listOfWords) => {
@@ -40,7 +40,6 @@ const App = () => {
             <Text
               as="span"
               m="1"
-              direction="ltr"
               fontSize="md"
               className="word-highlighted"
               color="green.400"
@@ -52,7 +51,6 @@ const App = () => {
             <Text
               as="span"
               m="1"
-              direction="ltr"
               fontSize="md"
               className="word"
               color="grey.900"
