@@ -19,19 +19,16 @@ const App = () => {
       () => words.english[Math.floor(Math.random() * words.english.length)]
     );
 
-    console.log(typingWords);
-
     return typingWords;
   };
 
-  const [numWords, setNumWords] = useState(100);
+  const [numWords, setNumWords] = useState(10);
   const [wordlist, setWordlist] = useState(getWords(numWords));
 
   const highlightCurrWord = (current, listOfWords) => {
     let textBoxes = [];
     let currWord = current;
     let renderedWord = 0;
-    console.log("here");
 
     listOfWords.forEach((w) => {
       // if we're at the current word, highlight it
@@ -67,8 +64,7 @@ const App = () => {
   const [typeBoxColor, setTypeBoxC] = useState("blue.100");
   const [startTime, setStartTime] = useState(0);
   const [endTime, setEndTime] = useState(0);
-
-  let correctWords = 0;
+  const [correctWords, setCorrectWords] = useState(0);
 
   const calculateWPM = () => {
     // in milliseconds!
@@ -88,6 +84,11 @@ const App = () => {
       playerWord.target.value.length > 1
     ) {
       // moving to the next word if we aren't at the end
+      if (playerWord.target.value.substring(0, currWord.length) === currWord) {
+        console.log(correctWords);
+        setCorrectWords(correctWords + 1);
+        console.log(correctWords);
+      }
       if (currentWord < numWords - 1) {
         setCurrentWord(currentWord + 1);
         if (typeBoxColor === "red.100") setTypeBoxC("blue.100");
@@ -114,8 +115,6 @@ const App = () => {
       (playerWord.target.value !== " " || playerWord.target.value !== "")
     ) {
       setStartTime(Date.now());
-    } else if (playerWord.target.value === currWord) {
-      correctWords++;
     }
   };
 
