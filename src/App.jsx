@@ -7,7 +7,7 @@ import { ThemeProvider, CSSReset, Flex, Box, Text } from "@chakra-ui/core";
 
 const App = () => {
   const [currentWord, setCurrentWord] = useState(0);
-
+  let numChars = 0;
   const getWords = (numWords) => {
     const numW = numWords;
     let typingWords = [];
@@ -19,22 +19,22 @@ const App = () => {
       () => words.english[Math.floor(Math.random() * words.english.length)]
     );
 
-    console.log(typingWords);
-
     return typingWords;
   };
 
-  const [numWords, setNumWords] = useState(100);
+  const [numWords, setNumWords] = useState(10);
   const [wordlist, setWordlist] = useState(getWords(numWords));
 
   const highlightCurrWord = (current, listOfWords) => {
     let textBoxes = [];
     let currWord = current;
     let renderedWord = 0;
-    console.log("here");
 
     listOfWords.forEach((w) => {
       // if we're at the current word, highlight it
+      // need to get the number of total characters for later calculation,
+      // better to do it now than in another for each
+      numChars += w.length;
       renderedWord === currWord
         ? textBoxes.push(
             <Text
@@ -64,21 +64,74 @@ const App = () => {
     return textBoxes;
   };
 
-  const compareWords = (playerWord) => {
+  const [typeBoxColor, setTypeBoxC] = useState("blue.100");
+  const [startTime, setStartTime] = useState(0);
+  let endTime = 0;
+  let correctChars = 0;
+
+  const calculateWPM = () => {
+    // put into mins
+    console.log("starttime: " + startTime);
+    console.log("endtime: " + endTime);
+    console.log("numChars: " + numChars);
+
+    const timeElapsed = (endTime - startTime) / 60000;
+    // 5 is the average length of a word, bigger words will count more
+    const wordsTyped = Math.floor(numChars / 5);
+
+    return Math.floor(wordsTyped / timeElapsed);
+  };
+
+  const compareWords = (currWord, playerWord) => {
+    // making sure players can't spam the space bar to increase
+    // currentWord
     if (playerWord.target.value === " ") {
       playerWord.target.value = "";
       return;
+    }
+    // moving to the next word
+    if (
+      // start the timer
+      currentWord === 0 &&
+      startTime === 0 &&
+      (playerWord.target.value !== " " || playerWord.target.value !== "")
+    ) {
+      console.log("here");
+      setStartTime(Date.now());
+      console.log(startTime);
     }
     if (
       playerWord.target.value.slice(-1) === " " &&
       playerWord.target.value.length > 1
     ) {
+      // moving to the next word if we aren't at the end
+      if (playerWord.target.value.substring(0, currWord.length) === currWord) {
+        correctChars += currWord.length;
+      }
       if (currentWord < numWords - 1) {
         setCurrentWord(currentWord + 1);
+        if (typeBoxColor === "red.100") setTypeBoxC("blue.100");
       } else {
+        // test is done, going to calculations now
+        endTime = Date.now();
+        console.log("endtime1: " + endTime);
+        console.log("starttime1: " + startTime);
+        const wpm = calculateWPM();
+        console.log(wpm);
+        setStartTime(0);
         setCurrentWord(0);
       }
+      // clear the input box every time we go to the next word
       playerWord.target.value = "";
+    } else if (
+      // checking the correctness of the in progress word
+      // blue for good red for bad
+      playerWord.target.value !==
+      currWord.substring(0, playerWord.target.value.length)
+    ) {
+      setTypeBoxC("red.100");
+    } else if (typeBoxColor === "red.100") {
+      setTypeBoxC("blue.100");
     }
   };
 
@@ -105,6 +158,7 @@ const App = () => {
             words={wordlist}
             compWord={compareWords}
             currentWord={currentWord}
+            color={typeBoxColor}
           />
         </Flex>
       </Box>

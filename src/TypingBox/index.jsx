@@ -1,6 +1,5 @@
 import React from "react";
 import { PseudoBox } from "@chakra-ui/core";
-import "../index.css";
 
 const TypingBox = (props) => {
   const pholder = props.currentWord === 0 ? " happy typing!" : "";
@@ -18,15 +17,15 @@ const TypingBox = (props) => {
       my="5"
       h="2rem"
       _hover={{
-        bg: "blue.100",
+        bg: props.color,
         boxShadow: "lg",
       }}
       _focus={{
-        bg: "blue.100",
+        bg: props.color,
         outline: "none",
         boxShadow: "lg",
       }}
-      onChange={(w) => props.compWord(w)}
+      onChange={(w) => props.compWord(props.words[props.currentWord], w)}
     />
   );
 };

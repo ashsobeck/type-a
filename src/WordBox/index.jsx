@@ -2,8 +2,6 @@ import React from "react";
 import { Box } from "@chakra-ui/core";
 
 const WordBox = (props) => {
-  console.log("here in wordbox");
-  console.log(props.words);
   return (
     <Box
       className="word-box"
