@@ -64,7 +64,9 @@ const App = () => {
     return textBoxes;
   };
 
-  const compareWords = (playerWord) => {
+  const [typeBoxColor, setTypeBoxC] = useState("blue.100");
+
+  const compareWords = (currWord, playerWord) => {
     if (playerWord.target.value === " ") {
       playerWord.target.value = "";
       return;
@@ -75,10 +77,20 @@ const App = () => {
     ) {
       if (currentWord < numWords - 1) {
         setCurrentWord(currentWord + 1);
+        if (typeBoxColor === "red.100") setTypeBoxC("blue.100");
       } else {
         setCurrentWord(0);
       }
       playerWord.target.value = "";
+    } else {
+      if (
+        playerWord.target.value !==
+        currWord.substring(0, playerWord.target.value.length)
+      ) {
+        setTypeBoxC("red.100");
+      } else {
+        if (typeBoxColor === "red.100") setTypeBoxC("blue.100");
+      }
     }
   };
 
@@ -105,6 +117,7 @@ const App = () => {
             words={wordlist}
             compWord={compareWords}
             currentWord={currentWord}
+            color={typeBoxColor}
           />
         </Flex>
       </Box>
