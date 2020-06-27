@@ -65,32 +65,57 @@ const App = () => {
   };
 
   const [typeBoxColor, setTypeBoxC] = useState("blue.100");
+  const [startTime, setStartTime] = useState(0);
+  const [endTime, setEndTime] = useState(0);
+
+  let correctWords = 0;
+
+  const calculateWPM = () => {
+    // in milliseconds!
+    const timeElapsed = endTime - startTime;
+  };
 
   const compareWords = (currWord, playerWord) => {
+    // making sure players can't spam the space bar to increase
+    // currentWord
     if (playerWord.target.value === " ") {
       playerWord.target.value = "";
       return;
     }
+    // moving to the next word
     if (
       playerWord.target.value.slice(-1) === " " &&
       playerWord.target.value.length > 1
     ) {
+      // moving to the next word if we aren't at the end
       if (currentWord < numWords - 1) {
         setCurrentWord(currentWord + 1);
         if (typeBoxColor === "red.100") setTypeBoxC("blue.100");
       } else {
-        setCurrentWord(0);
+        // test is done, going to calculations now
+        setEndTime(Date.now());
+        calculateWPM();
+        // setCurrentWord(0);
       }
+      // clear the input box every time we go to the next word
       playerWord.target.value = "";
-    } else {
-      if (
-        playerWord.target.value !==
-        currWord.substring(0, playerWord.target.value.length)
-      ) {
-        setTypeBoxC("red.100");
-      } else {
-        if (typeBoxColor === "red.100") setTypeBoxC("blue.100");
-      }
+    } else if (
+      // checking the correctness of the in progress word
+      // blue for good red for bad
+      playerWord.target.value !==
+      currWord.substring(0, playerWord.target.value.length)
+    ) {
+      setTypeBoxC("red.100");
+    } else if (typeBoxColor === "red.100") {
+      setTypeBoxC("blue.100");
+    } else if (
+      // start the timer
+      currentWord === 0 &&
+      (playerWord.target.value !== " " || playerWord.target.value !== "")
+    ) {
+      setStartTime(Date.now());
+    } else if (playerWord.target.value === currWord) {
+      correctWords++;
     }
   };
 
