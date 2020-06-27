@@ -7,7 +7,7 @@ import { ThemeProvider, CSSReset, Flex, Box, Text } from "@chakra-ui/core";
 
 const App = () => {
   const [currentWord, setCurrentWord] = useState(0);
-
+  let numChars = 0;
   const getWords = (numWords) => {
     const numW = numWords;
     let typingWords = [];
@@ -32,6 +32,9 @@ const App = () => {
 
     listOfWords.forEach((w) => {
       // if we're at the current word, highlight it
+      // need to get the number of total characters for later calculation,
+      // better to do it now than in another for each
+      numChars += w.length;
       renderedWord === currWord
         ? textBoxes.push(
             <Text
@@ -63,12 +66,20 @@ const App = () => {
 
   const [typeBoxColor, setTypeBoxC] = useState("blue.100");
   const [startTime, setStartTime] = useState(0);
-  const [endTime, setEndTime] = useState(0);
-  const [correctWords, setCorrectWords] = useState(0);
+  let endTime = 0;
+  let correctChars = 0;
 
   const calculateWPM = () => {
-    // in milliseconds!
-    const timeElapsed = endTime - startTime;
+    // put into mins
+    console.log("starttime: " + startTime);
+    console.log("endtime: " + endTime);
+    console.log("numChars: " + numChars);
+
+    const timeElapsed = (endTime - startTime) / 60000;
+    // 5 is the average length of a word, bigger words will count more
+    const wordsTyped = Math.floor(numChars / 5);
+
+    return Math.floor(wordsTyped / timeElapsed);
   };
 
   const compareWords = (currWord, playerWord) => {
@@ -80,23 +91,35 @@ const App = () => {
     }
     // moving to the next word
     if (
+      // start the timer
+      currentWord === 0 &&
+      startTime === 0 &&
+      (playerWord.target.value !== " " || playerWord.target.value !== "")
+    ) {
+      console.log("here");
+      setStartTime(Date.now());
+      console.log(startTime);
+    }
+    if (
       playerWord.target.value.slice(-1) === " " &&
       playerWord.target.value.length > 1
     ) {
       // moving to the next word if we aren't at the end
       if (playerWord.target.value.substring(0, currWord.length) === currWord) {
-        console.log(correctWords);
-        setCorrectWords(correctWords + 1);
-        console.log(correctWords);
+        correctChars += currWord.length;
       }
       if (currentWord < numWords - 1) {
         setCurrentWord(currentWord + 1);
         if (typeBoxColor === "red.100") setTypeBoxC("blue.100");
       } else {
         // test is done, going to calculations now
-        setEndTime(Date.now());
-        calculateWPM();
-        // setCurrentWord(0);
+        endTime = Date.now();
+        console.log("endtime1: " + endTime);
+        console.log("starttime1: " + startTime);
+        const wpm = calculateWPM();
+        console.log(wpm);
+        setStartTime(0);
+        setCurrentWord(0);
       }
       // clear the input box every time we go to the next word
       playerWord.target.value = "";
@@ -109,12 +132,6 @@ const App = () => {
       setTypeBoxC("red.100");
     } else if (typeBoxColor === "red.100") {
       setTypeBoxC("blue.100");
-    } else if (
-      // start the timer
-      currentWord === 0 &&
-      (playerWord.target.value !== " " || playerWord.target.value !== "")
-    ) {
-      setStartTime(Date.now());
     }
   };
 
