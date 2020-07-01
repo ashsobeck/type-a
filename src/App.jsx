@@ -29,15 +29,19 @@ const App = () => {
     let textBoxes = [];
     let currWord = current;
     let renderedWord = 0;
+    let count = 0;
+    let idName = "";
 
     listOfWords.forEach((w) => {
       // if we're at the current word, highlight it
       // need to get the number of total characters for later calculation,
       // better to do it now than in another for each
       numChars += w.length;
+      idName = `word-${count++}`;
       renderedWord === currWord
         ? textBoxes.push(
             <Text
+              id={idName}
               as="span"
               m="1"
               fontSize="md"
@@ -49,6 +53,7 @@ const App = () => {
           )
         : textBoxes.push(
             <Text
+              id={idName}
               as="span"
               m="1"
               fontSize="md"
@@ -65,20 +70,24 @@ const App = () => {
   };
 
   const [typeBoxColor, setTypeBoxC] = useState("blue.100");
+  // const [startTime, setStartTime] = useState(0);
+  let start = 0;
   const [startTime, setStartTime] = useState(0);
+  const [correctChars, setCorrectChars] = useState(0);
   let endTime = 0;
-  let correctChars = 0;
 
   const calculateWPM = () => {
     // put into mins
     console.log("starttime: " + startTime);
     console.log("endtime: " + endTime);
-    console.log("numChars: " + numChars);
+    console.log("correctChars: " + correctChars);
 
-    const timeElapsed = (endTime - startTime) / 60000;
+    const timeElapsed = (endTime - startTime) / 1000 / 60;
+    console.log(timeElapsed);
     // 5 is the average length of a word, bigger words will count more
-    const wordsTyped = Math.floor(numChars / 5);
-
+    const wordsTyped = correctChars / 5;
+    console.log(wordsTyped);
+    setCorrectChars(0);
     return Math.floor(wordsTyped / timeElapsed);
   };
 
@@ -97,8 +106,10 @@ const App = () => {
       (playerWord.target.value !== " " || playerWord.target.value !== "")
     ) {
       console.log("here");
-      setStartTime(Date.now());
-      console.log(startTime);
+      // setStartTime(Date.now());
+      start = Date.now();
+      setStartTime(start);
+      console.log(`starttime: ${startTime}`);
     }
     if (
       playerWord.target.value.slice(-1) === " " &&
@@ -106,7 +117,10 @@ const App = () => {
     ) {
       // moving to the next word if we aren't at the end
       if (playerWord.target.value.substring(0, currWord.length) === currWord) {
-        correctChars += currWord.length;
+        console.log(playerWord.target.value);
+        console.log(currWord);
+        setCorrectChars(correctChars + currWord.length + 1);
+        console.log(correctChars);
       }
       if (currentWord < numWords - 1) {
         setCurrentWord(currentWord + 1);
@@ -119,6 +133,7 @@ const App = () => {
         const wpm = calculateWPM();
         console.log(wpm);
         setStartTime(0);
+        // startTime = 0;
         setCurrentWord(0);
       }
       // clear the input box every time we go to the next word
