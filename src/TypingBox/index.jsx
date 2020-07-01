@@ -11,7 +11,7 @@ const TypingBox = (props) => {
       rounded="sm"
       bg="gray.200"
       alignSelf="center"
-      maxW="30%"
+      w="10rem"
       textAlign="center"
       boxShadow="md"
       my="5"
