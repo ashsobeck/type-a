@@ -109,7 +109,7 @@ const App = () => {
       // setStartTime(Date.now());
       start = Date.now();
       setStartTime(start);
-      console.log(`starttime: ${startTime}`);
+      console.log(`starttime: ${start}`);
     }
     if (
       playerWord.target.value.slice(-1) === " " &&
@@ -119,7 +119,11 @@ const App = () => {
       if (playerWord.target.value.substring(0, currWord.length) === currWord) {
         console.log(playerWord.target.value);
         console.log(currWord);
-        setCorrectChars(correctChars + currWord.length + 1);
+        setCorrectChars(
+          currentWord < numWords - 1
+            ? correctChars + currWord.length + 1
+            : correctChars + currWord.length
+        );
         console.log(correctChars);
       }
       if (currentWord < numWords - 1) {
@@ -128,8 +132,8 @@ const App = () => {
       } else {
         // test is done, going to calculations now
         endTime = Date.now();
-        console.log("endtime1: " + endTime);
-        console.log("starttime1: " + startTime);
+        console.log(`endtime1: ${endTime}`);
+        console.log(`starttime1: ${startTime}`);
         const wpm = calculateWPM();
         console.log(wpm);
         setStartTime(0);
