@@ -24,14 +24,24 @@ describe("typing box functionality", () => {
     cy.get("#typing-box").should("have.value", "");
   });
 
-  it("typing box clears after a space", () => {
+  it("typing box clears after a word plus a space", () => {
     cy.get("#typing-box").click().type("word ");
     cy.get("#typing-box").should("have.value", "");
   });
 });
 
-// describe("word highlighting functionality", () => {
-//   it.only("should have the first word highlighted initially", () => {
-//     cy.get(".word-box").get("#word-0").should("have.css", ".word-highlighted");
-//   });
-// });
+describe("word highlighting functionality", () => {
+  it("should have the first word highlighted initially", () => {
+    cy.get(".word-box").get("#word-0").should("have.class", "word-highlighted");
+  });
+
+  it("should move the highlight to the next word after a word plus a space ", () => {
+    cy.get(".word-box").get("#word-0").should("have.class", "word-highlighted");
+    cy.get("#typing-box").click().type("word ");
+    cy.get(".word-box")
+      .get("#word-0")
+      .should("not.have.class", "word-highlighted");
+    cy.get(".word-box").get("#word-1").should("have.class", "word-highlighted");
+    cy.get("#typing-box").should("have.value", "");
+  });
+});
