@@ -7,7 +7,9 @@ const WordBox = (props) => {
       className="word-box"
       bg="gray.100"
       p="1"
-      maxW="100%"
+      maxW="90%"
+      minW="36%"
+      w={["97%", "70%", "50%", "35%"]}
       h="auto"
       alignSelf="center"
       rounded="lg"
