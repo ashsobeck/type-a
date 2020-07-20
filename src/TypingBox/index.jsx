@@ -11,10 +11,13 @@ const TypingBox = (props) => {
       rounded="sm"
       bg="gray.200"
       alignSelf="center"
-      w="10rem"
+      maxW="10rem"
+      minW="10%"
+      w="auto"
       textAlign="center"
       boxShadow="md"
       my="5"
+      mx="1"
       h="2rem"
       _hover={{
         bg: props.color,
