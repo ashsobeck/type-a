@@ -3,7 +3,15 @@ import "./index.css";
 import words from "./WordBox/words.json";
 import TypingBox from "./TypingBox";
 import WordBox from "./WordBox";
-import { ThemeProvider, CSSReset, Flex, Box, Text } from "@chakra-ui/core";
+import Wpm from "./Wpm";
+import {
+  ThemeProvider,
+  CSSReset,
+  Flex,
+  Box,
+  Text,
+  Grid,
+} from "@chakra-ui/core";
 
 const App = () => {
   const [currentWord, setCurrentWord] = useState(0);
@@ -22,7 +30,7 @@ const App = () => {
     return typingWords;
   };
 
-  const [numWords, setNumWords] = useState(10);
+  const [numWords, setNumWords] = useState(100);
   const [wordlist, setWordlist] = useState(getWords(numWords));
 
   const highlightCurrWord = (current, listOfWords) => {
@@ -74,6 +82,7 @@ const App = () => {
   let start = 0;
   const [startTime, setStartTime] = useState(0);
   const [correctChars, setCorrectChars] = useState(0);
+  const [wpm, setWpm] = useState(0);
   let endTime = 0;
 
   const calculateWPM = () => {
@@ -117,14 +126,11 @@ const App = () => {
     ) {
       // moving to the next word if we aren't at the end
       if (playerWord.target.value.substring(0, currWord.length) === currWord) {
-        console.log(playerWord.target.value);
-        console.log(currWord);
         setCorrectChars(
           currentWord < numWords - 1
             ? correctChars + currWord.length + 1
             : correctChars + currWord.length
         );
-        console.log(correctChars);
       }
       if (currentWord < numWords - 1) {
         setCurrentWord(currentWord + 1);
@@ -132,12 +138,8 @@ const App = () => {
       } else {
         // test is done, going to calculations now
         endTime = Date.now();
-        console.log(`endtime1: ${endTime}`);
-        console.log(`starttime1: ${startTime}`);
-        const wpm = calculateWPM();
-        console.log(wpm);
+        setWpm(calculateWPM());
         setStartTime(0);
-        // startTime = 0;
         setCurrentWord(0);
       }
       // clear the input box every time we go to the next word
@@ -157,14 +159,15 @@ const App = () => {
   return (
     <ThemeProvider>
       <CSSReset />
-      <Box>
+      <Flex h="100%" w="100%">
         <Flex
           className="test-area"
           alignContent="center"
           justify="center"
           flexDirection="column"
-          w="32%"
           margin="auto"
+          minW="36%"
+          w="auto"
           h="100vh"
           alignItems="center"
         >
@@ -173,14 +176,23 @@ const App = () => {
             wordlist={wordlist}
             currentWord={currentWord}
           />
-          <TypingBox
-            words={wordlist}
-            compWord={compareWords}
-            currentWord={currentWord}
-            color={typeBoxColor}
-          />
+          <Flex
+            flexDirection="row"
+            justifyContent="space-between"
+            w={["94%", "67%", "47%", "33%"]}
+            alignItems="center"
+          >
+            <Wpm wpm={wpm} />
+            <TypingBox
+              words={wordlist}
+              compWord={compareWords}
+              currentWord={currentWord}
+              color={typeBoxColor}
+            />
+            <Wpm />
+          </Flex>
         </Flex>
-      </Box>
+      </Flex>
     </ThemeProvider>
   );
 };
