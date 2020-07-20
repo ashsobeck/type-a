@@ -4,14 +4,8 @@ import words from "./WordBox/words.json";
 import TypingBox from "./TypingBox";
 import WordBox from "./WordBox";
 import Wpm from "./Wpm";
-import {
-  ThemeProvider,
-  CSSReset,
-  Flex,
-  Box,
-  Text,
-  Grid,
-} from "@chakra-ui/core";
+import Accuracy from "./Accuracy";
+import { ThemeProvider, CSSReset, Flex, Text } from "@chakra-ui/core";
 
 const App = () => {
   const [currentWord, setCurrentWord] = useState(0);
@@ -179,7 +173,7 @@ const App = () => {
           <Flex
             flexDirection="row"
             justifyContent="space-between"
-            w={["94%", "67%", "47%", "33%"]}
+            w={["85%", "67%", "47%", "33%"]}
             alignItems="center"
           >
             <Wpm wpm={wpm} />
@@ -189,7 +183,7 @@ const App = () => {
               currentWord={currentWord}
               color={typeBoxColor}
             />
-            <Wpm />
+            <Accuracy acc={0} />
           </Flex>
         </Flex>
       </Flex>
