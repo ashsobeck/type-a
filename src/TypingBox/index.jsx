@@ -2,7 +2,7 @@ import React from "react";
 import { PseudoBox } from "@chakra-ui/core";
 
 const TypingBox = (props) => {
-  const pholder = props.currentWord === 0 ? " happy typing!" : "";
+  const pholder = props.currentWord === 0 ? "happy typing!" : "";
   return (
     <PseudoBox
       id="typing-box"
@@ -11,14 +11,15 @@ const TypingBox = (props) => {
       rounded="sm"
       bg="gray.200"
       alignSelf="center"
-      maxW="10rem"
-      minW="10%"
+      maxW="8rem"
+      minW="4rem"
       w="auto"
       textAlign="center"
       boxShadow="md"
       my="5"
-      mx="1"
-      h="2rem"
+      ml="3"
+      h="2.2rem"
+      padding="4"
       _hover={{
         bg: props.color,
         boxShadow: "lg",
