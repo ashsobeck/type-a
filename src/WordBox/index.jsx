@@ -7,18 +7,17 @@ const WordBox = (props) => {
       className="word-box"
       bg="gray.100"
       p="1"
-      maxW="90%"
-      minW="36%"
-      w={["97%", "70%", "50%", "35%"]}
       h="auto"
       alignSelf="center"
       rounded="lg"
       display="block"
       direction="ltr"
+      w={["85%", "77%", "72%", "67%"]}
+      // maxW="80%"
       textAlign="left"
       boxShadow="xl"
     >
-      {props.renderWord(props.currentWord, props.wordlist).map((t) => t)}
+      {props.renderWord(props.currentWord, props.wordlist)}
     </Box>
   );
 };

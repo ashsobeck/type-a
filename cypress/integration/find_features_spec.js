@@ -45,3 +45,13 @@ describe("word highlighting functionality", () => {
     cy.get("#typing-box").should("have.value", "");
   });
 });
+
+describe("find wpm and acc", () => {
+  it.only("should find the wpm box", () => {
+    cy.get("#wpm").should("have.text", "wpm | -");
+  });
+  it("should find the acc box", () => {
+    cy.get("#acc").should("have.text", "0 | acc");
+    cy.get("#acc").should("have")
+  });
+});

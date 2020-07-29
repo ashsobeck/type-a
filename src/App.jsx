@@ -5,27 +5,42 @@ import TypingBox from "./TypingBox";
 import WordBox from "./WordBox";
 import Wpm from "./Wpm";
 import Accuracy from "./Accuracy";
-import { ThemeProvider, CSSReset, Flex, Text } from "@chakra-ui/core";
+import {
+  ThemeProvider,
+  CSSReset,
+  Flex,
+  Text,
+  IconButton,
+} from "@chakra-ui/core";
 
 const App = () => {
   const [currentWord, setCurrentWord] = useState(0);
-  let numChars = 0;
-  const getWords = (numWords) => {
-    const numW = numWords;
-    let typingWords = [];
+  const [typeBoxColor, setTypeBoxC] = useState("blue.100");
+  // const [startTime, setStartTime] = useState(0);
+  let start = 0;
+  let endTime = 0;
+  const [startTime, setStartTime] = useState(0);
+  const [correctChars, setCorrectChars] = useState(0);
+  const [wpm, setWpm] = useState(0);
+  const [acc, setAcc] = useState(0);
+  const [numWords, setNumWords] = useState(10);
 
-    typingWords = Array.from(
+  const getWords = (numWords) => {
+    return Array.from(
       // make an array of the length passed in from random
       // indeces of the words file
-      { length: numW },
+      { length: numWords },
       () => words.english[Math.floor(Math.random() * words.english.length)]
     );
-
-    return typingWords;
   };
-
-  const [numWords, setNumWords] = useState(100);
   const [wordlist, setWordlist] = useState(getWords(numWords));
+  const [numChars, setNumChars] = useState(() => {
+    let numC = 0;
+    wordlist.forEach((w) => {
+      numC += w.length + 1;
+    });
+    return numC;
+  });
 
   const highlightCurrWord = (current, listOfWords) => {
     let textBoxes = [];
@@ -38,7 +53,6 @@ const App = () => {
       // if we're at the current word, highlight it
       // need to get the number of total characters for later calculation,
       // better to do it now than in another for each
-      numChars += w.length;
       idName = `word-${count++}`;
       renderedWord === currWord
         ? textBoxes.push(
@@ -67,31 +81,30 @@ const App = () => {
           );
       renderedWord++;
     });
-
     return textBoxes;
   };
-
-  const [typeBoxColor, setTypeBoxC] = useState("blue.100");
-  // const [startTime, setStartTime] = useState(0);
-  let start = 0;
-  const [startTime, setStartTime] = useState(0);
-  const [correctChars, setCorrectChars] = useState(0);
-  const [wpm, setWpm] = useState(0);
-  let endTime = 0;
 
   const calculateWPM = () => {
     // put into mins
     console.log("starttime: " + startTime);
     console.log("endtime: " + endTime);
     console.log("correctChars: " + correctChars);
-
     const timeElapsed = (endTime - startTime) / 1000 / 60;
     console.log(timeElapsed);
     // 5 is the average length of a word, bigger words will count more
     const wordsTyped = correctChars / 5;
+    console.log(`num chars ${numChars}`);
     console.log(wordsTyped);
-    setCorrectChars(0);
     return Math.floor(wordsTyped / timeElapsed);
+  };
+
+  const reset = () => {
+    setStartTime(0);
+    setCorrectChars(0);
+    setCurrentWord(0);
+    setWordlist(getWords(numWords));
+
+    return;
   };
 
   const compareWords = (currWord, playerWord) => {
@@ -113,6 +126,13 @@ const App = () => {
       start = Date.now();
       setStartTime(start);
       console.log(`starttime: ${start}`);
+      setNumChars(() => {
+        let numC = 0;
+        wordlist.forEach((w) => {
+          numC += w.length;
+        });
+        return numC;
+      });
     }
     if (
       playerWord.target.value.slice(-1) === " " &&
@@ -120,24 +140,22 @@ const App = () => {
     ) {
       // moving to the next word if we aren't at the end
       if (playerWord.target.value.substring(0, currWord.length) === currWord) {
-        setCorrectChars(
-          currentWord < numWords - 1
-            ? correctChars + currWord.length + 1
-            : correctChars + currWord.length
-        );
+        setCorrectChars(correctChars + playerWord.target.value.length);
       }
       if (currentWord < numWords - 1) {
         setCurrentWord(currentWord + 1);
-        if (typeBoxColor === "red.100") setTypeBoxC("blue.100");
+        if (typeBoxColor === "red.100") {
+          setTypeBoxC("blue.100");
+        }
       } else {
         // test is done, going to calculations now
         endTime = Date.now();
         setWpm(calculateWPM());
-        setStartTime(0);
-        setCurrentWord(0);
+        setAcc(Math.trunc((correctChars / numChars) * 100));
       }
-      // clear the input box every time we go to the next word
       playerWord.target.value = "";
+      return;
+      // clear the input box every time we go to the next word
     } else if (
       // checking the correctness of the in progress word
       // blue for good red for bad
@@ -173,17 +191,29 @@ const App = () => {
           <Flex
             flexDirection="row"
             justifyContent="space-between"
-            w={["85%", "67%", "47%", "33%"]}
+            w={["80%", "74%", "71%", "65%"]}
             alignItems="center"
           >
             <Wpm wpm={wpm} />
-            <TypingBox
-              words={wordlist}
-              compWord={compareWords}
-              currentWord={currentWord}
-              color={typeBoxColor}
-            />
-            <Accuracy acc={0} />
+            <Flex flexDirection="row" alignItems="center">
+              <TypingBox
+                words={wordlist}
+                compWord={compareWords}
+                currentWord={currentWord}
+                color={typeBoxColor}
+              />
+              <IconButton
+                icon="repeat"
+                mr="3"
+                mx="1"
+                my="5"
+                backgroundColor="gray.200"
+                boxShadow="md"
+                h="2.2rem"
+                onClick={reset}
+              />
+            </Flex>
+            <Accuracy acc={acc} />
           </Flex>
         </Flex>
       </Flex>
