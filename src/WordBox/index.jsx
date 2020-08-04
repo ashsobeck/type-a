@@ -12,7 +12,11 @@ const WordBox = (props) => {
       rounded="lg"
       display="block"
       direction="ltr"
-      w={["85%", "77%", "72%", "67%"]}
+      w={
+        props.wordlist.length > 50
+          ? ["85%", "77%", "72%", "50%"]
+          : ["85%", "77%", "72%", "65%"]
+      }
       // maxW="80%"
       textAlign="left"
       boxShadow="xl"

@@ -5,6 +5,7 @@ import TypingBox from "./TypingBox";
 import WordBox from "./WordBox";
 import Wpm from "./Wpm";
 import Accuracy from "./Accuracy";
+import SettingsModal from "./SettingsModal";
 import {
   ThemeProvider,
   CSSReset,
@@ -23,7 +24,7 @@ const App = () => {
   const [correctChars, setCorrectChars] = useState(0);
   const [wpm, setWpm] = useState(0);
   const [acc, setAcc] = useState(0);
-  const [numWords, setNumWords] = useState(10);
+  const [numWords, setNumWords] = useState(100);
 
   const getWords = (numWords) => {
     return Array.from(
@@ -183,6 +184,7 @@ const App = () => {
           h="100vh"
           alignItems="center"
         >
+          <SettingsModal alignSelf="flex-start"></SettingsModal>
           <WordBox
             renderWord={highlightCurrWord}
             wordlist={wordlist}
@@ -191,7 +193,11 @@ const App = () => {
           <Flex
             flexDirection="row"
             justifyContent="space-between"
-            w={["80%", "74%", "71%", "65%"]}
+            w={
+              wordlist.length > 50
+                ? ["85%", "77%", "72%", "49%"]
+                : ["85%", "77%", "72%", "65%"]
+            }
             alignItems="center"
           >
             <Wpm wpm={wpm} />
