@@ -6,25 +6,33 @@ import WordBox from "./WordBox";
 import Wpm from "./Wpm";
 import Accuracy from "./Accuracy";
 import SettingsModal from "./SettingsModal";
+import { RefreshCw } from "react-feather";
 import {
-  ThemeProvider,
+  ChakraProvider,
   CSSReset,
   Flex,
   Text,
   IconButton,
 } from "@chakra-ui/core";
 
+import theme from "@chakra-ui/theme";
+
 const App = () => {
   const [currentWord, setCurrentWord] = useState(0);
   const [typeBoxColor, setTypeBoxC] = useState("blue.100");
-  // const [startTime, setStartTime] = useState(0);
   let start = 0;
   let endTime = 0;
   const [startTime, setStartTime] = useState(0);
   const [correctChars, setCorrectChars] = useState(0);
-  const [wpm, setWpm] = useState(0);
+  const [netWpm, setNetWpm] = useState(0);
+  const [grossWpm, setGrossWpm] = useState(0);
   const [acc, setAcc] = useState(0);
-  const [numWords, setNumWords] = useState(100);
+  const [numWords, setNumWords] = useState(10);
+  const [listOfWrong, setListOfWrong] = useState([]);
+  const [listOfRight, setListOfRight] = useState([]);
+  const [autoReset, setAutoReset] = useState(false);
+  const [uncorrectedErrors, setUncorrectedErrors] = useState(0);
+  const [isFocus, setIsFocus] = useState(false);
 
   const getWords = (numWords) => {
     return Array.from(
@@ -35,15 +43,13 @@ const App = () => {
     );
   };
   const [wordlist, setWordlist] = useState(getWords(numWords));
-  const [numChars, setNumChars] = useState(() => {
-    let numC = 0;
-    wordlist.forEach((w) => {
-      numC += w.length + 1;
-    });
-    return numC;
-  });
 
-  const highlightCurrWord = (current, listOfWords) => {
+  const highlightCurrWord = (
+    current,
+    listOfWords,
+    listOfWrong,
+    listOfRight
+  ) => {
     let textBoxes = [];
     let currWord = current;
     let renderedWord = 0;
@@ -75,7 +81,13 @@ const App = () => {
               m="1"
               fontSize="md"
               className="word"
-              color="grey.900"
+              color={
+                listOfRight.includes(renderedWord)
+                  ? "blue.400"
+                  : listOfWrong.includes(renderedWord)
+                  ? "orange.400"
+                  : "grey.900"
+              }
             >
               {w + " "}
             </Text>
@@ -85,18 +97,29 @@ const App = () => {
     return textBoxes;
   };
 
+  const diffBetweenTwoWords = (wordOne, wordTwo) => {
+    let diff = 0;
+    for (let i = 0; i < wordOne.length; i++) {
+      if (wordOne.charAt(i) !== wordTwo.charAt(i)) diff++;
+    }
+    return diff;
+  };
+
   const calculateWPM = () => {
     // put into mins
-    console.log("starttime: " + startTime);
-    console.log("endtime: " + endTime);
-    console.log("correctChars: " + correctChars);
     const timeElapsed = (endTime - startTime) / 1000 / 60;
-    console.log(timeElapsed);
     // 5 is the average length of a word, bigger words will count more
     const wordsTyped = correctChars / 5;
-    console.log(`num chars ${numChars}`);
-    console.log(wordsTyped);
-    return Math.floor(wordsTyped / timeElapsed);
+    setGrossWpm(wordsTyped / timeElapsed);
+    setNetWpm(Math.trunc((wordsTyped - uncorrectedErrors) / timeElapsed));
+    setAcc(
+      Math.trunc(
+        ((wordsTyped - uncorrectedErrors) /
+          timeElapsed /
+          (wordsTyped / timeElapsed)) *
+          100
+      )
+    );
   };
 
   const reset = () => {
@@ -104,6 +127,11 @@ const App = () => {
     setCorrectChars(0);
     setCurrentWord(0);
     setWordlist(getWords(numWords));
+    setListOfWrong([]);
+    setListOfRight([]);
+    setTypeBoxC("blue.100");
+    setUncorrectedErrors(0);
+    setIsFocus(true);
 
     return;
   };
@@ -123,17 +151,16 @@ const App = () => {
       (playerWord.target.value !== " " || playerWord.target.value !== "")
     ) {
       console.log("here");
-      // setStartTime(Date.now());
       start = Date.now();
       setStartTime(start);
       console.log(`starttime: ${start}`);
-      setNumChars(() => {
-        let numC = 0;
-        wordlist.forEach((w) => {
-          numC += w.length;
-        });
-        return numC;
-      });
+      // setNumChars(() => {
+      //   let numC = 0;
+      //   wordlist.forEach((w) => {
+      //     numC += w.length + 1;
+      //   });
+      //   return numC;
+      // });
     }
     if (
       playerWord.target.value.slice(-1) === " " &&
@@ -142,6 +169,20 @@ const App = () => {
       // moving to the next word if we aren't at the end
       if (playerWord.target.value.substring(0, currWord.length) === currWord) {
         setCorrectChars(correctChars + playerWord.target.value.length);
+
+        listOfRight.push(currentWord);
+        setListOfRight(listOfRight);
+      } else {
+        const localDiff = diffBetweenTwoWords(
+          currWord,
+          playerWord.target.value
+        );
+        setUncorrectedErrors(uncorrectedErrors + localDiff);
+        setCorrectChars(
+          correctChars + Math.max(0, currWord.length - localDiff)
+        );
+        listOfWrong.push(currentWord);
+        setListOfWrong(listOfWrong);
       }
       if (currentWord < numWords - 1) {
         setCurrentWord(currentWord + 1);
@@ -151,8 +192,12 @@ const App = () => {
       } else {
         // test is done, going to calculations now
         endTime = Date.now();
-        setWpm(calculateWPM());
-        setAcc(Math.trunc((correctChars / numChars) * 100));
+        setCurrentWord(currentWord + 1);
+        calculateWPM();
+        // let localAcc = (netWpm / grossWpm) * 100;
+        // setAcc(localAcc);
+        console.log(netWpm);
+        if (autoReset) reset();
       }
       playerWord.target.value = "";
       return;
@@ -170,7 +215,7 @@ const App = () => {
   };
 
   return (
-    <ThemeProvider>
+    <ChakraProvider theme={theme}>
       <CSSReset />
       <Flex h="100%" w="100%">
         <Flex
@@ -184,46 +229,65 @@ const App = () => {
           h="100vh"
           alignItems="center"
         >
-          <SettingsModal alignSelf="flex-start"></SettingsModal>
+          <SettingsModal
+            numWords={numWords}
+            autoReset={autoReset}
+            getWords={getWords}
+            setNumWords={setNumWords}
+            setWordlist={setWordlist}
+            setAutoReset={setAutoReset}
+          ></SettingsModal>
           <WordBox
             renderWord={highlightCurrWord}
             wordlist={wordlist}
             currentWord={currentWord}
+            listOfWrong={listOfWrong}
+            listOfRight={listOfRight}
           />
           <Flex
             flexDirection="row"
             justifyContent="space-between"
             w={
-              wordlist.length > 50
-                ? ["85%", "77%", "72%", "49%"]
-                : ["85%", "77%", "72%", "65%"]
+              wordlist.length > 25
+                ? ["85%", "77%", "72%", "40%"]
+                : ["85%", "77%", "72%", "50%"]
             }
             alignItems="center"
           >
-            <Wpm wpm={wpm} />
-            <Flex flexDirection="row" alignItems="center">
+            <Wpm wpm={netWpm} />
+            <Flex
+              flexDirection="row"
+              alignItems="center"
+              p="3"
+              position="center
+              "
+            >
               <TypingBox
                 words={wordlist}
                 compWord={compareWords}
                 currentWord={currentWord}
                 color={typeBoxColor}
+                isFocus={isFocus}
               />
               <IconButton
-                icon="repeat"
+                icon={<RefreshCw size="16" className="image" p="5" />}
                 mr="3"
                 mx="1"
                 my="5"
                 backgroundColor="gray.200"
                 boxShadow="md"
                 h="2.2rem"
-                onClick={reset}
+                onClick={() => {
+                  setIsFocus(true);
+                  reset();
+                }}
               />
             </Flex>
             <Accuracy acc={acc} />
           </Flex>
         </Flex>
       </Flex>
-    </ThemeProvider>
+    </ChakraProvider>
   );
 };
 
