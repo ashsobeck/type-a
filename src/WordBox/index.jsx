@@ -13,15 +13,20 @@ const WordBox = (props) => {
       display="block"
       direction="ltr"
       w={
-        props.wordlist.length > 50
-          ? ["85%", "77%", "72%", "50%"]
-          : ["85%", "77%", "72%", "65%"]
+        props.wordlist.length > 25
+          ? ["85%", "77%", "72%", "43%"]
+          : ["85%", "77%", "72%", "50%"]
       }
       // maxW="80%"
       textAlign="left"
       boxShadow="xl"
     >
-      {props.renderWord(props.currentWord, props.wordlist)}
+      {props.renderWord(
+        props.currentWord,
+        props.wordlist,
+        props.listOfWrong,
+        props.listOfRight
+      )}
     </Box>
   );
 };
